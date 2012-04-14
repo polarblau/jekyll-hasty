@@ -1,7 +1,7 @@
 module Jekyll
   class HastyCommentsTag < Liquid::Tag
 
-    API_REPOS_URL = 'https://api.github.com/repos'
+    API_REPOS_URL = 'https://api.github.com/repos/'
 
     def initialize(tag_name, text, tokens)
       super
@@ -13,7 +13,7 @@ module Jekyll
 
       attributes = {
         'id'                => 'comments',
-        'data-comments-url' => github_comments_url,
+        'data-comments-url' => github_commits_url,
         'data-commit-ids'   => commit_ids(file)
       }
 
@@ -43,8 +43,8 @@ module Jekyll
       end
     end
 
-    def github_comments_url
-      [API_REPOS_URL, repo, 'commits', '{sha}', 'comments'].join('/')
+    def github_commits_url
+      File.join(API_REPOS_URL, repo, 'commits')
     end
 
     def generate_tag(attributes)
