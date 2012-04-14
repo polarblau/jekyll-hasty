@@ -12,9 +12,9 @@ module Jekyll
       file = file_name(context)
 
       attributes = {
-        'id'                => 'comments',
-        'data-comments-url' => github_commits_url,
-        'data-commit-ids'   => commit_ids(file)
+        'id'               => 'comments',
+        'data-commits-url' => github_commits_url,
+        'data-commit-ids'  => commit_ids(file)
       }
 
       generate_tag(attributes)
