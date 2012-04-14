@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 $:.unshift File.expand_path('../lib', __FILE__)
-require 'jekyll-hasty/version'
+require 'jekyll/hasty/version'
 
 Gem::Specification.new do |s|
   s.name          = "jekyll-hasty"
@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.authors       = ["Polarblau"]
   s.email         = ["polarblau@gmail.com"]
   s.homepage      = "https://github.com/polarblau/jekyll-hasty"
-  s.summary       = "jquery.hasty comments."
+  s.summary       = "jquery.hasty comments"
   s.description   = "A wrapper for a small plugin in ease integration with jquery.hasty comments."
 
   s.files         = `git ls-files app lib`.split("\n")
