@@ -4,6 +4,7 @@ module Jekyll
     alias :liquid_data :to_liquid
 
     def to_liquid
+      puts "", "to liquid", ""
       liquid_data.deep_merge({
         "file_name" => file_name
       })

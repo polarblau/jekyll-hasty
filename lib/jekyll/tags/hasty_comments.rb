@@ -10,7 +10,7 @@ module Jekyll
 
     def render(context)
       file_name = context.environments.first["page"]["file_name"]
-      puts "", "File name: #{file_name}", ""
+      puts "", "File name: #{file_name}", context.environments.first["page"].inspect, ""
       cmd = "git log --pretty=format:'%H' --follow #{file_name}"
       commit_ids = `#{cmd}`.split(/\W+/)#.split('\n')
 
