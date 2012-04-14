@@ -1,3 +1,5 @@
+puts "INCLUDE POST EXT."
+
 module Jekyll
   class Post
 
