@@ -9,36 +9,48 @@ module Jekyll
     end
 
     def render(context)
-      file_name = context.environments.first["page"]["file_name"]
-      puts "", "File name: #{file_name}", context.environments.first["page"].inspect, ""
-      cmd = "git log --pretty=format:'%H' --follow #{file_name}"
-      commit_ids = `#{cmd}`.split(/\W+/)#.split('\n')
-
-      url = `git config --get remote.origin.url`.chomp
-      url.gsub!(%r{git://github.com/(.*\.git)}, 'git@github.com:\1')
-
-      if url =~ /^git@github/
-        # validate that it's a proper github url
-      else
-        raise "only supports github URLs"
-      end
-
-      repo = url.scan(%r{git@github.com:(.*).git}).flatten.first
-
-      comments_url = [API_REPOS_URL, repo, 'commits', '{sha}', 'comments'].join('/')
+      file = file_name(context)
 
       attributes = {
         'id'                => 'comments',
-        'data-comments-url' => comments_url,
-        'data-commit-ids'   => commit_ids
+        'data-comments-url' => github_comments_url,
+        'data-commit-ids'   => commit_ids(file)
       }
 
-      markup = "<div "
-      markup << attributes.map{|k, v| "#{k}='#{v}'"}.join(' ')
-      markup << ">#{@text}</div>"
-
-      markup
+      generate_tag(attributes)
     end
+  end
+
+  #
+
+  def file_name(context)
+    context.environments.first["page"]["file_name"]
+  end
+
+  def commit_ids(file)
+    cmd = "git log --pretty=format:'%H' --follow #{file}"
+    `#{cmd}`.split(/\W+/)
+  end
+
+  def repo
+    url = `git config --get remote.origin.url`.chomp
+    url.gsub!(%r{git://github.com/(.*\.git)}, 'git@github.com:\1')
+
+    if url =~ /^git@github/
+      url.scan(%r{git@github.com:(.*).git}).flatten.first
+    else
+      # TODO: proper exception
+      raise "only supports github URLs"
+    end
+  end
+
+  def github_comments_url
+    [API_REPOS_URL, repo, 'commits', '{sha}', 'comments'].join('/')
+  end
+
+  def generate_tag(attributes)
+    attr = attributes.map{|k, v| "#{k}='#{v}'"}.join(' ')
+    "<div #{attr}>#{@text}</div>"
   end
 
 end
