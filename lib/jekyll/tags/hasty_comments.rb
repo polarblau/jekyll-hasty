@@ -19,40 +19,40 @@ module Jekyll
 
       generate_tag(attributes)
     end
-  end
 
-  #
+    #
 
-  def file_name(context)
-    context.environments.first["page"]["file_name"]
-  end
-
-  def commit_ids(file)
-    cmd = "git log --pretty=format:'%H' --follow #{file}"
-    `#{cmd}`.split(/\W+/)
-  end
-
-  def repo
-    url = `git config --get remote.origin.url`.chomp
-    url.gsub!(%r{git://github.com/(.*\.git)}, 'git@github.com:\1')
-
-    if url =~ /^git@github/
-      url.scan(%r{git@github.com:(.*).git}).flatten.first
-    else
-      # TODO: proper exception
-      raise "only supports github URLs"
+    def file_name(context)
+      context.environments.first["page"]["file_name"]
     end
-  end
 
-  def github_comments_url
-    [API_REPOS_URL, repo, 'commits', '{sha}', 'comments'].join('/')
-  end
+    def commit_ids(file)
+      cmd = "git log --pretty=format:'%H' --follow #{file}"
+      `#{cmd}`.split(/\W+/)
+    end
 
-  def generate_tag(attributes)
-    attr = attributes.map{|k, v| "#{k}='#{v}'"}.join(' ')
-    "<div #{attr}>#{@text}</div>"
-  end
+    def repo
+      url = `git config --get remote.origin.url`.chomp
+      url.gsub!(%r{git://github.com/(.*\.git)}, 'git@github.com:\1')
 
+      if url =~ /^git@github/
+        url.scan(%r{git@github.com:(.*).git}).flatten.first
+      else
+        # TODO: proper exception
+        raise "only supports github URLs"
+      end
+    end
+
+    def github_comments_url
+      [API_REPOS_URL, repo, 'commits', '{sha}', 'comments'].join('/')
+    end
+
+    def generate_tag(attributes)
+      attr = attributes.map{|k, v| "#{k}='#{v}'"}.join(' ')
+      "<div #{attr}>#{@text}</div>"
+    end
+
+  end
 end
 
 Liquid::Template.register_tag('hasty_comments', Jekyll::HastyCommentsTag)
