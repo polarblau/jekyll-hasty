@@ -1,3 +1,2 @@
-require "post"
-require "jekyll/post"
+require File.expand_path(File.dirname(__FILE__) + '/post')
 require "jekyll/tags/hasty_comments"
