@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors       = ["Polarblau"]
   s.email         = ["polarblau@gmail.com"]
   s.homepage      = "https://github.com/polarblau/jekyll-hasty"
-  s.summary       = "TODO: summary"
-  s.description   = "TODO: description"
+  s.summary       = "A wrapper for a small plugin in ease integration with jquery.hasty comments."
+  # s.description   = "TODO: description"
 
   s.files         = `git ls-files app lib`.split("\n")
   s.platform      = Gem::Platform::RUBY
