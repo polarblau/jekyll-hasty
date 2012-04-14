@@ -1,2 +1,2 @@
-require "post"
-require "tags/hasty_comments"
+require "jekyll/post"
+require "jekyll/tags/hasty_comments"
