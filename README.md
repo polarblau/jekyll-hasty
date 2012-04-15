@@ -1,5 +1,7 @@
 # jekyll-hasty
 
+"!https://secure.travis-ci.org/polarblau/jekyll-hasty.png!":http://travis-ci.org/polarblau/jekyll-hasty
+
 ## Preconditions
 
 * git repository
