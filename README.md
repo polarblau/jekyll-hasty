@@ -30,3 +30,10 @@ In your posts use the hasty tag:
 ```
 
 Ensure your posts are committed.
+
+## WARNING!
+
+This first version of jekyll-hasty [monkey–patches](https://github.com/polarblau/jekyll-hasty/blob/master/lib/jekyll/post.rb) `Jekyll::Post` by
+overriding/extending `#to_liquid`. It is definitely a goal to solve this
+otherwise in the future, either by forking Jekyll, suggesting the
+extension to original project or some other way.
