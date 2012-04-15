@@ -16,7 +16,6 @@ module Jekyll
         'data-commits-url' => github_commits_url,
         'data-commit-ids'  => commit_ids(file)
       }
-
       generate_tag(attributes)
     end
 
