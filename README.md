@@ -2,6 +2,9 @@
 
 [![Build Status](https://secure.travis-ci.org/polarblau/jekyll-hasty.png)](http://travis-ci.org/polarblau/jekyll-hasty])
 
+At this point of time the `jquery.hasty` plugin **is still under
+development incomplete**! Since the jquery plugin is the heart of Hasty,
+you will still have to wait a bit until you can start using it. Sorry.
 
 ## Preconditions
 
