@@ -17,7 +17,7 @@ require 'jekyll/hasty'
 ```
 
 Add jquery plugin as described here:
-https://github.com/polarblau/jekyll-hasty
+https://github.com/polarblau/hasty
 
 ## Usage
 
@@ -27,4 +27,4 @@ In your posts use the hasty tag:
 {% hasty_comments %}
 ```
 
-Ensure your posts is committed.
+Ensure your posts are committed.
