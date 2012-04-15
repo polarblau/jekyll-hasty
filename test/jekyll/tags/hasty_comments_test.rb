@@ -28,15 +28,15 @@ class HastyCommentsTagTest < Test::Unit::TestCase
 
   def test_file_name
     context = mock
-    context.expects(:environments)
-           .returns([{'page' => {'file_name' => 'foo.md'}}])
+    context.expects(:environments).
+            returns([{'page' => {'file_name' => 'foo.md'}}])
     assert_equal @tag.file_name(context), 'foo.md'
   end
 
   def test_commit_ids
-    @tag.expects(:`)
-        .with("git log --pretty=format:'%H' --follow foo.md")
-        .returns('123')
+    @tag.expects(:`).
+         with("git log --pretty=format:'%H' --follow foo.md").
+         returns('123')
     assert_equal @tag.commit_ids('foo.md'), ['123']
   end
 
@@ -52,9 +52,9 @@ class HastyCommentsTagTest < Test::Unit::TestCase
 
 
   def test_repo_system_call
-    @tag.expects(:`)
-        .returns(VALID_GITHUB_REPO)
-        .at_least_once
+    @tag.expects(:`).
+         returns(VALID_GITHUB_REPO).
+         at_least_once
     @tag.repo
   end
 
@@ -66,18 +66,18 @@ class HastyCommentsTagTest < Test::Unit::TestCase
   end
 
   def test_repo_system_call_params
-    @tag.expects(:`)
-        .with('git config --get remote.origin.url')
-        .returns(VALID_GITHUB_REPO)
-        .at_least_once
+    @tag.expects(:`).
+         with('git config --get remote.origin.url').
+         returns(VALID_GITHUB_REPO).
+         at_least_once
     assert_equal @tag.repo, 'polarblau/jekyll-hasty-test-blog'
   end
 
 
   def test_repo_return
-    @tag.expects(:`)
-        .with('git config --get remote.origin.url')
-        .returns(VALID_GITHUB_REPO)
+    @tag.expects(:`).
+         with('git config --get remote.origin.url').
+         returns(VALID_GITHUB_REPO)
     @tag.repo
   end
 
