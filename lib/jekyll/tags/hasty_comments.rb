@@ -1,3 +1,5 @@
+require 'json'
+
 module Jekyll
   class HastyCommentsTag < Liquid::Tag
 
@@ -59,6 +61,8 @@ module Jekyll
     # generates <div/> tag and assigns [attributes]
     # as attributes to it
     def generate_tag(file)
+      # TODO: Ruby 1.8.7: [1,2,3].to_s => "123", not '[1,2,3]'
+      # use to_json?
       attr = attributes(file).map{|k, v| "#{k}='#{v}'"}.join(' ')
       "<div #{attr}>#{@text}</div>"
     end
