@@ -1,5 +1,21 @@
 require 'json'
 
+class Hash
+  # with Ruby 1.8.7 Array#to_s yields
+  # '123' for [1,2,3], same for Hashes
+  def to_html_attributes
+    attr = []
+    self.each do |k, v|
+      if v.is_a?(Array) || v.is_a?(Hash)
+        attr << "#{k}='#{v.to_json}'"
+      else
+        attr << "#{k}='#{v}'"
+      end
+    end
+    attr.join(' ')
+  end
+end
+
 module Jekyll
   class HastyCommentsTag < Liquid::Tag
 
@@ -61,9 +77,7 @@ module Jekyll
     # generates <div/> tag and assigns [attributes]
     # as attributes to it
     def generate_tag(file)
-      # TODO: Ruby 1.8.7: [1,2,3].to_s => "123", not '[1,2,3]'
-      # use to_json?
-      attr = attributes(file).map{|k, v| "#{k}='#{v}'"}.join(' ')
+      attr = attributes(file).to_html_attributes
       "<div #{attr}>#{@text}</div>"
     end
 
@@ -71,3 +85,5 @@ module Jekyll
 end
 
 Liquid::Template.register_tag('hasty_comments', Jekyll::HastyCommentsTag)
+
+
