@@ -77,8 +77,8 @@ module Jekyll
     # generates <div/> tag and assigns [attributes]
     # as attributes to it
     def generate_tag(file)
-      attr = attributes(file).to_html_attributes
-      "<div #{attr}>#{@text}</div>"
+      html_attributes = attributes(file).to_html_attributes
+      "<div #{html_attributes}>#{@text}</div>"
     end
 
   end

@@ -99,8 +99,13 @@ class HastyCommentsTagTest < Test::Unit::TestCase
     @tag.expects(:github_user).returns('user')
     @tag.expects(:github_repo).returns('repo')
 
-    assert_equal @tag.generate_tag('file.md'),
-      "<div id='comments' data-github-user='user' data-github-repo='repo' data-commit-ids='[\"123abc\"]'>bar</div>"
+    html = @tag.generate_tag('file.md')
+    %w(id='comments'
+       data-github-user='user'
+       data-github-repo='repo'
+       data-commit-ids='["123abc"]').each do |attr|
+      assert html.include?(attr), "#{html} should contain #{attr} but does not"
+    end
   end
 
   def test_attributes_id
