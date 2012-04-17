@@ -1,53 +1,65 @@
 module Jekyll
   class HastyCommentsTag < Liquid::Tag
 
-    API_REPOS_URL = 'https://api.github.com/repos/'
-
     def initialize(tag_name, text, tokens)
       super
       @text = text
     end
 
     def render(context)
-      file = file_name(context)
-
-      attributes = {
-        'id'               => 'comments',
-        'data-commits-url' => github_commits_url,
-        'data-commit-ids'  => commit_ids(file)
-      }
-      generate_tag(attributes)
+      file = current_file(context)
+      generate_tag(file)
     end
 
-    #
-
-    def file_name(context)
+    # the "caller" file
+    def current_file(context)
       context.environments.first["page"]["file_name"]
     end
 
+    # gather all commit hashes affecting [file]
     def commit_ids(file)
       cmd = "git log --pretty=format:'%H' --follow #{file}"
       `#{cmd}`.split(/\W+/)
     end
 
+    # get github repository information for current directoy
     def repo
+      return @repo if defined?(@repo)
       url = `git config --get remote.origin.url`.chomp
       url.gsub!(%r{git://github.com/(.*\.git)}, 'git@github.com:\1')
 
       if url =~ /^git@github/
-        url.scan(%r{git@github.com:(.*).git}).flatten.first
+        @repo = url.scan(%r{git@github.com:(.*).git}).flatten.first
       else
         # TODO: proper exception
         raise "only supports github URLs"
       end
     end
 
-    def github_commits_url
-      File.join(API_REPOS_URL, repo, 'commits')
+    # extract github user
+    def github_user
+      repo.split('/').first
     end
 
-    def generate_tag(attributes)
-      attr = attributes.map{|k, v| "#{k}='#{v}'"}.join(' ')
+    # extract github repository name
+    def github_repo
+      repo.split('/').last
+    end
+
+    # gather attributes for the tag
+    def attributes(file)
+      {
+        'id'               => 'comments',
+        'data-github-user' => github_user,
+        'data-github-repo' => github_repo,
+        'data-commit-ids'  => commit_ids(file)
+      }
+    end
+
+    # generates <div/> tag and assigns [attributes]
+    # as attributes to it
+    def generate_tag(file)
+      attr = attributes(file).map{|k, v| "#{k}='#{v}'"}.join(' ')
       "<div #{attr}>#{@text}</div>"
     end
 

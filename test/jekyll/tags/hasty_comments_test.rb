@@ -26,11 +26,15 @@ class HastyCommentsTagTest < Test::Unit::TestCase
     @tag = Jekyll::HastyCommentsTag.new('foo', 'bar', 'bat')
   end
 
-  def test_file_name
+  def teardown
+    @tag = nil
+  end
+
+  def test_current_file
     context = mock
     context.expects(:environments).
             returns([{'page' => {'file_name' => 'foo.md'}}])
-    assert_equal @tag.file_name(context), 'foo.md'
+    assert_equal @tag.current_file(context), 'foo.md'
   end
 
   def test_commit_ids
@@ -73,7 +77,6 @@ class HastyCommentsTagTest < Test::Unit::TestCase
     assert_equal @tag.repo, 'polarblau/jekyll-hasty-test-blog'
   end
 
-
   def test_repo_return
     @tag.expects(:`).
          with('git config --get remote.origin.url').
@@ -81,16 +84,57 @@ class HastyCommentsTagTest < Test::Unit::TestCase
     @tag.repo
   end
 
-  def test_github_commits_url
-    @tag.expects(:repo).returns('the/repository')
-    assert_equal @tag.github_commits_url,
-      "#{Jekyll::HastyCommentsTag::API_REPOS_URL}the/repository/commits"
+  def test_github_user
+    @tag.expects(:repo).returns('user/repository')
+    assert_equal @tag.github_user, 'user'
+  end
+
+  def test_github_repo
+    @tag.expects(:repo).returns('user/repository')
+    assert_equal @tag.github_repo, 'repository'
   end
 
   def test_generate_tag
-    attr = {'foo' => 'bar'}
-    assert_equal @tag.generate_tag(attr),
-      "<div foo='bar'>bar</div>"
+    @tag.expects(:commit_ids).returns(['123abc'])
+    @tag.expects(:github_user).returns('user')
+    @tag.expects(:github_repo).returns('repo')
+
+    assert_equal @tag.generate_tag('file.md'),
+      "<div id='comments' data-github-user='user' data-github-repo='repo' data-commit-ids='[\"123abc\"]'>bar</div>"
+  end
+
+  def test_attributes_id
+    @tag.expects(:commit_ids).returns(['123'])
+
+    attr = @tag.attributes('foo.md')
+    assert attr.keys.include? 'id'
+    assert_equal attr['id'], 'comments'
+  end
+
+  def test_attributes_github_user
+    @tag.expects(:github_user).returns('user')
+    @tag.expects(:commit_ids).returns(['123'])
+
+    attr = @tag.attributes('foo.md')
+    assert attr.keys.include? 'data-github-user'
+    assert_equal attr['data-github-user'], 'user'
+  end
+
+  def test_attributes_github_repo
+    @tag.expects(:github_repo).returns('repo')
+    @tag.expects(:commit_ids).returns(['123'])
+
+    attr = @tag.attributes('foo.md')
+    assert attr.keys.include? 'data-github-repo'
+    assert_equal attr['data-github-repo'], 'repo'
+  end
+
+  def test_attributes_commit_ids
+    @tag.expects(:commit_ids).returns(['123'])
+
+    attr = @tag.attributes('foo.md')
+    assert attr.keys.include? 'data-commit-ids'
+    assert_equal attr['data-commit-ids'], ['123']
   end
 
 end
